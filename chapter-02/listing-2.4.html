@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>Test Suite</title>
+
+    <style>
+      #results li.pass { color: green; }
+      #results li.fail { color: red; }
+    </style>
+
+  </head>
+  <body>
+    <ul id="results"></ul>
+
+    <script>
+
+      (function() {
+        'use strict';
+
+        function assert (value, desc) {
+          var li = document.createElement('li');
+          li.classList.add(value ? 'pass' : 'fail');
+          li.textContent = desc;
+          document.getElementById('results').appendChild(li);
+        }
+
+        assert(true, 'テストスイートを実行中');
+        assert(false, '失敗');
+      }());
+
+    </script>
+  </body>
+</html>
