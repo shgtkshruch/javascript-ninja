@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>Test Suite</title>
+
+    <style>
+      #results li.pass { color: green; }
+      #results li.fail { color: red; }
+    </style>
+
+  </head>
+  <body>
+    <ul id="results"></ul>
+
+    <script>
+
+      (function() {
+        'use strict';
+
+        var queue = [],
+            paused = false,
+            results;
+
+        function test (name, fn) {
+          queue.push(function () {
+            results = document.getElementById('results');
+            results = assert(true, name).appendChild(document.createElement('ul'));
+            fn();
+          });
+          runTest();
+        }
+
+        function pause () {
+          paused = true;
+        }
+
+        function resume () {
+          paused = false;
+          setTimeout(runTest, 1);
+        }
+
+        function runTest () {
+          if (!paused && queue.length) {
+            (queue.shift())();
+            if (!paused) {
+              resume();
+            }
+          }
+        }
+
+        function assert (value, desc) {
+          var li = document.createElement('li');
+
+          li.classList.add(value ? 'pass' : 'fail');
+          li.textContent = desc;
+          results.appendChild(li);
+
+          if (!value) {
+            var parentListClass = li.parentNode.parentNode.classList
+
+            parentListClass.remove('pass');
+            parentListClass.add('fail');
+          }
+
+          return li;
+        }
+
+        // Test suite
+        test('非同期テスト #1', function () {
+          pause();
+          setTimeout(function() {
+            assert(true, '第1テスト完了');
+            resume();
+          }, 1000);
+        });
+
+        test('非同期テスト #2', function () {
+          pause();
+          setTimeout(function() {
+            assert(false, '第2テスト失敗');
+            resume();
+          }, 1000);
+        });
+
+        test('非同期テスト #3', function () {
+          pause();
+          setTimeout(function() {
+            assert(true, '第3テスト完了');
+            resume();
+          }, 1000);
+        });
+      }());
+
+    </script>
+  </body>
+</html>
