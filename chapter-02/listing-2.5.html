@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>Test Suite</title>
+
+    <style>
+      #results li.pass { color: green; }
+      #results li.fail { color: red; }
+    </style>
+
+  </head>
+  <body>
+    <ul id="results"></ul>
+
+    <script>
+
+      (function() {
+        'use strict';
+
+        var results;
+
+        function assert (value, desc) {
+          var li = document.createElement('li');
+
+          li.classList.add(value ? 'pass' : 'fail');
+          li.textContent = desc;
+          results.appendChild(li);
+
+          if (!value) {
+            var parentListClass = li.parentNode.parentNode.classList
+
+            parentListClass.remove('pass');
+            parentListClass.add('fail');
+          }
+
+          return li;
+        }
+
+        function test (name, fn) {
+          results = document.getElementById('results');
+          results = assert(true, name).appendChild(document.createElement('ul'));
+          fn();
+        }
+
+        // Test suite
+        test('テストA', function () {
+          assert(true, '第1アサート完了');
+          assert(true, '第2アサート完了');
+          assert(true, '第3アサート完了');
+        });
+
+        test('テストB', function () {
+          assert(true, '第1アサート完了');
+          assert(false, '第2アサート失敗');
+          assert(true, '第3アサート完了');
+        });
+
+        test('テストC', function () {
+          assert(null, '失敗');
+          assert(5, '合格');
+        });
+      }());
+
+    </script>
+  </body>
+</html>
